@@ -4,4 +4,4 @@ joblib
 dvc[gcs]
 feast[sqlite]
 pytest
-cml-dev  # <-- THIS IS THE FIX
+
