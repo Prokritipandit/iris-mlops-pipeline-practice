@@ -1,7 +1,7 @@
 pandas
 scikit-learn
 joblib
-dvc-gs
+dvc[gcs]
 feast[sqlite]
 pytest
-cml-dev
+cml-dev  # <-- THIS IS THE FIX
