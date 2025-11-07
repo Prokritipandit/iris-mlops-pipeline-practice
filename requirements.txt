@@ -4,4 +4,4 @@ joblib
 dvc-gs
 feast[sqlite]
 pytest
-cml
+cml-dev
