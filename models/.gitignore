@@ -1,3 +1,4 @@
 /model.joblib
 /X_test.csv
 /y_test.csv
+/label_encoder.joblib
