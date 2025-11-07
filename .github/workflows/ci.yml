@@ -74,19 +74,19 @@ jobs:
           pytest -v | tee pytest-report.txt
 
       # 8. Post CML Report
-     # 8. Setup Node.js
-- name: Setup Node.js
-  uses: actions/setup-node@v3
-  with:
-    node-version: '18' # Use a stable LTS version
+      # 8. Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+         node-version: '18' # Use a stable LTS version
 
-# 9. Install CML and Post Report
-- name: Install CML and Post Report
-  env:
-    repo_token: ${{ secrets.GITHUB_TOKEN }}
-  run: |
-    # Install CML globally using npm
-    npm install -g @dvcai/cml
+      # 9. Install CML and Post Report
+      - name: Install CML and Post Report
+        env:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Install CML globally using npm
+          npm install -g @dvcai/cml
 
     # Now the cml command will be found
     cml comment create --pr pytest-report.txt
