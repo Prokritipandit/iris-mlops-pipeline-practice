@@ -30,7 +30,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install pandas scikit-learn joblib dvc-gs feast[sqlite] pytest numpy
 
       # 4. Authenticate to Google Cloud
       - name: Authenticate to GCS
@@ -42,7 +42,7 @@ jobs:
       - name: Pull DVC data and models
         run: |
           # DVC needs the gcloud CLI to use the credentials
-          sudo apt-get install -y google-cloud-sdk
+          sudo apt-get install -y google-cloud-cli
 
           # DVC pull
           dvc pull
@@ -74,11 +74,19 @@ jobs:
           pytest -v | tee pytest-report.txt
 
       # 8. Post CML Report
-      - name: Create CML report
-        env:
-          # This token is required for CML to post a comment
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # Post the pytest-report.txt as a comment
-          # --pr tells it to post on the PR, if this is a PR build
-          cml comment create --pr pytest-report.txt
+     # 8. Setup Node.js
+- name: Setup Node.js
+  uses: actions/setup-node@v3
+  with:
+    node-version: '18' # Use a stable LTS version
+
+# 9. Install CML and Post Report
+- name: Install CML and Post Report
+  env:
+    repo_token: ${{ secrets.GITHUB_TOKEN }}
+  run: |
+    # Install CML globally using npm
+    npm install -g @dvcai/cml
+
+    # Now the cml command will be found
+    cml comment create --pr pytest-report.txt
