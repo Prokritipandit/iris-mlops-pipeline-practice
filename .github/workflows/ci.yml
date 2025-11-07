@@ -30,7 +30,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install pandas scikit-learn joblib dvc-gs feast[sqlite] pytest numpy
 
       # 4. Authenticate to Google Cloud
       - name: Authenticate to GCS
