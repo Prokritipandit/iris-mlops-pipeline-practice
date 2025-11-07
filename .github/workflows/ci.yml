@@ -88,5 +88,4 @@ jobs:
           # Install CML globally using npm
           npm install -g @dvcai/cml
 
-    # Now the cml command will be found
-    cml comment create --pr pytest-report.txt
+          cml comment create --pr pytest-report.txt
