@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+.env
+
+# DVC (DVC already added some, but let's be safe)
+/models/
+/data/
+
+# Feast (CRITICAL)
+/feature_repo/feature_repo/data/
+/feature_repo/feature_repo/feature_store.db
+/feature_repo/feature_repo/registry.db
+
+# VSCode
+.vscode/

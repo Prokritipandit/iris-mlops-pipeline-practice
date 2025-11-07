@@ -1,0 +1,7 @@
+pandas
+scikit-learn
+joblib
+"dvc[gcs]"
+"feast[sqlite]"
+pytest
+cml
