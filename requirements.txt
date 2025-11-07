@@ -1,7 +1,7 @@
 pandas
 scikit-learn
 joblib
-"dvc-gs"
-"feast[sqlite]"
+dvc-gs
+feast[sqlite]
 pytest
 cml
