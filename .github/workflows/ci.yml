@@ -24,13 +24,21 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10' # Match your Vertex AI environment
+          python-version: '3.12' # Match your Vertex AI environment
+    
+      - name: setup nodejs
+        uses: actions/setup-node@v3
+        with: 
+          node-version: '22'
 
       # 3. Install all dependencies
       - name: Install dependencies
         run: |
           pip install --upgrade pip
           pip install pandas scikit-learn joblib dvc-gs feast[sqlite] pytest numpy
+          npm i -g @dvcorg/cml
+          npm install -g vega-cli vega-lite
+          sudo apt-get install -y libcairo2-dev libfontconfig-dev libgif-dev libpango1.0-dev librsvg2-dev
 
       # 4. Authenticate to Google Cloud
       - name: Authenticate to GCS
@@ -73,6 +81,7 @@ jobs:
           # Run tests and pipe the output to a report file
           pytest -v | tee pytest-report.txt
 
+
       # 8. Post CML Report
       # 8. Setup Node.js
       - name: Setup Node.js
@@ -80,12 +89,15 @@ jobs:
         with:
          node-version: '18' # Use a stable LTS version
 
+       81a7236873fd2a335790718ad32472efa87fc832
+
       # 9. Install CML and Post Report
       - name: Install CML and Post Report
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
         run: |
+         HEAD
         
-          npm install -g @dvcai/cml
-
-          cml comment create --pr pytest-report.txt
+         npm install -g @dvcai/cml
+        81a7236873fd2a335790718ad32472efa87fc832
+        cml comment create --pr pytest-report.txt
