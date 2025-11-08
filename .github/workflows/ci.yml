@@ -14,7 +14,7 @@ on:
 jobs:
   test-and-report:
     runs-on: ubuntu-latest
-
+    
     steps:
       # 1. Checkout your code
       - name: Checkout code
@@ -30,7 +30,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install pandas scikit-learn joblib dvc-gs feast[sqlite] pytest numpy
+          pip install -r requirements.txt
 
       # 4. Authenticate to Google Cloud
       - name: Authenticate to GCS
@@ -41,9 +41,9 @@ jobs:
       # 5. Setup DVC and pull data/models
       - name: Pull DVC data and models
         run: |
-          # DVC needs the gcloud CLI to use the credentials
+          # Use the new package name
           sudo apt-get install -y google-cloud-cli
-
+          
           # DVC pull
           dvc pull
         env:
@@ -55,15 +55,15 @@ jobs:
         run: |
           # Navigate to the correct, nested repo
           cd feature_repo/feature_repo
-
+          
           # DVC should have pulled this parquet file
           echo "Checking for offline data..."
           ls -l ../../data/
-
+          
           # Register features and build the local SQLite DB
           feast apply
           feast materialize-incremental 2026-01-01T00:00:00
-
+          
           # Go back to root
           cd ../../
 
@@ -71,21 +71,23 @@ jobs:
       - name: Run Pytest and create report
         run: |
           # Run tests and pipe the output to a report file
-          pytest -v | tee pytest-report.txt
+          # We add '|| true' so the workflow continues even if tests fail,
+          # allowing CML to report the failure.
+          pytest -v | tee pytest-report.txt || true
 
-      # 8. Post CML Report
-      # 8. Setup Node.js
+      # 8. Setup Node.js (for CML)
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-         node-version: '18' # Use a stable LTS version
+          node-version: '18' # Use a stable LTS version
 
       # 9. Install CML and Post Report
       - name: Install CML and Post Report
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
         run: |
-        
+          # Install CML globally using npm
           npm install -g @dvcai/cml
-
-          cml comment create --pr pytest-report.txt
+          
+          # Use the correct --target=pr flag
+          cml comment create --target=pr pytest-report.txt
